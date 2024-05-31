@@ -1,13 +1,6 @@
-Para inicar el proyecto: 
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Para inicar el proyecto: npm run dev
 
-Historial de Cambios
+#Historial de Cambios
 Versión 1.0 (30 de junio de 2024)
 Navegación de Productos:
 
