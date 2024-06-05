@@ -3,10 +3,13 @@ import Heading from "@/components/ui/heading";
 import { prisma } from "@/src/lib/prisma";
 
 
-async function getProducts() {
+async function getProducts(page: number, pageSize: number) {
 
+    const skip = (page - 1) * pageSize
 
     const products = await prisma.product.findMany({
+        take: pageSize,
+        skip,
         include: {
             category: true
         }
@@ -16,9 +19,11 @@ async function getProducts() {
 }
 export type ProductsWithCategory = Awaited<ReturnType<typeof getProducts>>
 
-export default async function ProductsPage() {
+export default async function ProductsPage({ searchParams }: { searchParams: { page: string } }) {
+    const page = +searchParams.page || 1
+    const pageSize = 20
 
-    const products = await getProducts()
+    const products = await getProducts(page, pageSize)
 
     return (
         <>
