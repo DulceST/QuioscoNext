@@ -1,3 +1,4 @@
+import ProductsPagination from "@/components/products/ProductsPagination";
 import ProductTable from "@/components/products/ProductsTable";
 import Heading from "@/components/ui/heading";
 import { prisma } from "@/src/lib/prisma";
@@ -30,6 +31,9 @@ export default async function ProductsPage({ searchParams }: { searchParams: { p
             <Heading> Administrar productos</Heading>
             <ProductTable
                 products={products} />
+
+                <ProductsPagination
+                page={page}/>
         </>
     )
 
