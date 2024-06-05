@@ -28,6 +28,8 @@ export default async function ProductsPage({ searchParams }: { searchParams: { p
     const page = +searchParams.page || 1
     const pageSize = 20
 
+    if(page < 0){redirect('/admin/products')}
+
     const productsData =  getProducts(page, pageSize)
     const totalProductsData = await productCount()
     const [ products, totalProducts] = await Promise.all([productsData, totalProductsData])
