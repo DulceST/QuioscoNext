@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { Category } from "@prisma/client"
-import { use } from "react"
+
 
 type CategoryIconProps = {
     category: Category
