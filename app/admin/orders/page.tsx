@@ -1,40 +1,45 @@
+"use client";
 import OrderCard from "@/components/order/OrderCard";
 import Heading from "@/components/ui/heading";
-import { prisma } from "@/src/lib/prisma";
+import { OrderWithProducts } from "@/src/types";
+import { FiLoader } from "react-icons/fi";
+import useSWR from "swr";
 
-async function getPendingOrders() {
-    const orders = await prisma.order.findMany({
-        where: {
-            status: false
-        }, 
-        include:{
-            OrderProducts: {
-                include: {
-                    product: true
-                }
-            }
-        }
-    })
+export default function OrdersPage() {
+  const url = "/admin/orders/api";
+  const fetcher = () =>
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => data);
+  const { data, error, isLoading } = useSWR<OrderWithProducts[]>(url, fetcher, {
+    refreshInterval: 10000,
+    revalidateOnFocus: false,
+  });
 
-    return orders
-}
-
-export default async function OrdersPage(){
-    const orders = await getPendingOrders()
-    
-    return(
-        <>
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FiLoader className="animate-spin text-4xl text-blue-950" />
+        <span className="ml-2 text-lg font-semibold text-blue-950">
+          Cargando...
+        </span>
+      </div>
+    );
+  }
+  if (data)
+    return (
+      <>
         <Heading>Administrar Ordenes</Heading>
-        {orders.length ? (
-            <div className="grid grid-cols-1 lg: grid-cols-2 2xl:grid-cols3 gap-5 mt-5">
-                {orders.map(order => (
-                    <OrderCard 
-                    key={order.id}
-                    order={order}/>
-                ))}
 
-            </div>
-        ) : <p className="text-center">No hay ordenes pendientes</p>}
-        </>
-    )
+        {data.length ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-2 gap-5 mt-5">
+            {data.map((order) => (
+              <OrderCard key={order.id} order={order} />
+            ))}{" "}
+          </div>
+        ) : (
+          <p className="text-center">No hay ordenes pendientes</p>
+        )}
+      </>
+    );
 }
